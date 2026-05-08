@@ -8,7 +8,16 @@ app = Flask(__name__)
 
 # -------- GOOGLE SHEETS --------#
 
+"""
 client = gspread.service_account(filename="credenciales.json")
+"""
+import os, json, tempfile
+creds_json = os.environ.get("GOOGLE_CREDENTIALS")
+with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+    f.write(creds_json)
+    tmp_path = f.name
+
+client = gspread.service_account(filename-tmp_path)
 sheet = client.open("ControlAsistencia").sheet1
 
 
@@ -93,4 +102,3 @@ def registro():
 # ------------ ARRANQUE ----------- #
 if __name__ == "__main__":
     app.run(debug=True)
-
