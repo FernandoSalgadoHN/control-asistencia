@@ -17,7 +17,7 @@ with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
     f.write(creds_json)
     tmp_path = f.name
 
-client = gspread.service_account(filename-tmp_path)
+client = gspread.service_account(filename=tmp_path)
 sheet = client.open("ControlAsistencia").sheet1
 
 
