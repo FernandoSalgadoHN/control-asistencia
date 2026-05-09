@@ -101,23 +101,29 @@ select:focus{{border-color:#1a56db}}
   <h1>Control de Asistencia</h1>
   <p class="sub">Selecciona tu nombre</p>
   <label for="nombre">Nombre</label>
-  <select id="nombre">
+  <select id="select-nombre" onchange="sincronizar(this.value)">
     <option value="">-- Selecciona tu nombre --</option>
     {opciones}
   </select>
+  <p style="text-align:center;color:#a0aec0;font-size:13px;margin:10px 0">— o escríbelo manualmente —</p>
+  <input type="text" id="nombre" placeholder="Ej: Juan García" autocomplete="name" oninput="document.getElementById('select-nombre').value=''"/>
+  <p style="text-align:center;color:#a0aec0;font-size:13px;margin:10px 0">— o escríbelo manualmente —</p>
+  <input type="text" id="nombre" placeholder="Ej: Juan García" autocomplete="name" oninput="document.getElementById('select-nombre').value=''"/>
   <button class="btn" onclick="registrar()">
     <i class="ti ti-fingerprint"></i> Registrar entrada / salida
   </button>
   <div class="result" id="resultado"></div>
   <p class="time" id="reloj"></p>
 </div>
+
 <script>
 function pad(n){{return String(n).padStart(2,'0')}}
 function tick(){{const n=new Date();document.getElementById('reloj').textContent=pad(n.getDate())+'/'+pad(n.getMonth()+1)+'/'+n.getFullYear()+'  ·  '+pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds())}}
 tick();setInterval(tick,1000);
+function sincronizar(val){{document.getElementById('nombre').value=val;}}
 function registrar(){{
-  const nombre=document.getElementById('nombre').value;
-  if(!nombre){{alert('Por favor selecciona tu nombre');return}}
+  const nombre=document.getElementById('nombre').value.trim() || document.getElementById('select-nombre').value;
+  if(!nombre){{alert('Por favor selecciona o escribe tu nombre');return}}
   const res=document.getElementById('resultado');
   res.style.display='block';res.className='result';res.textContent='Registrando...';
   fetch('/check?user='+encodeURIComponent(nombre))
@@ -127,6 +133,7 @@ function registrar(){{
     else if(t.includes('Salida')){{res.className='result salida';res.innerHTML='🕐 '+t}}
     else{{res.className='result completado';res.innerHTML='ℹ️ '+t}}
     document.getElementById('nombre').value='';
+    document.getElementById('select-nombre').value='';
   }});
 }}
 </script>
